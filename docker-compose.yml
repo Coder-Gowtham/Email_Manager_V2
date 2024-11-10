@@ -3,20 +3,20 @@ services:
     build:
       context: ./backend
     ports:
-      - "5000:5000" # Map backend service to localhost:5000
+      - "5000:5000"
     env_file:
-      - ./backend/.env # Load environment variables
+      - ./backend/.env
     depends_on:
-      es01:
-        condition: service_healthy
+      - es01
     networks:
       - app-network
     volumes:
-      - ./backend:/app # Mount the code
-      - /app/node_modules # Avoid mounting if node_modules should persist in container
+      - ./backend:/app
+      - /app/node_modules
     working_dir: /app
     command: >
-      sh -c "npm install && npm run start"
+      sh -c "until curl -s http://es01:9200; do echo 'Waiting for Elasticsearch...'; sleep 5; done && npm install --build-from-source && npm run start"
+
 
   frontend:
     build:
@@ -50,41 +50,6 @@ services:
       timeout: 10s
       retries: 10
 
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.9.0
-    environment:
-      - ELASTICSEARCH_HOSTS=http://es01:9200
-      - ELASTICSEARCH_USERNAME=kibana_user
-      - ELASTICSEARCH_PASSWORD=kibana_password
-    ports:
-      - "5602:5601"
-    networks:
-      - app-network
-    depends_on:
-      - es01
-      - elasticsearch-setup
-
-  elasticsearch-setup:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
-    environment:
-      - ELASTIC_PASSWORD=elastic@123
-    networks:
-      - app-network
-    depends_on:
-      es01:
-        condition: service_healthy
-    entrypoint: |
-      bash -c '
-      # Wait for Elasticsearch to be fully available
-      until curl -u elastic:elastic@123 -s http://es01:9200/_cat/health | grep -q green; do
-        echo "Waiting for Elasticsearch..."
-        sleep 5
-      done
-      # Create kibana_user with appropriate permissions
-      bin/elasticsearch-users useradd kibana_user -p kibana_password -r kibana_system
-      '
-      
 networks:
   app-network:
     driver: bridge
