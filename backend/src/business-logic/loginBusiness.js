@@ -1,6 +1,6 @@
 const { ENTERING_TO, BUSINESS_LOGIC, STATUS_CODE, ERROR_CODE } = require('../constants/constants');
 const userService = require('../services/userService.js');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { setSessionData, getSessionData } = require('../utils/sessionManager');
 
 const loginUsersBusiness = async (reqBody, redirection) => {

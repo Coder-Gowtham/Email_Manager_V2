@@ -149,7 +149,7 @@ const createIndicesService = async (indices, client) => {
         response.message = `Initial indices processed successfully! `
         return { success: STATUS_CODE.SUCCESS, message: response.message }
     } catch (error) {
-        console.error(`Error in createIndicesService || ${error.message}`);
+        console.error(`Error in createIndicesService || ${error}`);
         const dbErrorResponse = {
             status: error?.status || 510,
             message: "Error executing to database.",

@@ -44,11 +44,14 @@ const handleCallback = async (req, res) => {
     console.log(`${ENTERING_TO} ${BUSINESS_LOGIC} | handleCallback`,);
     const code = req.query.code;
 
+    console.log(`****************************************** 47`);
+    
     if (!code) {
         console.error('Authorization code missing from callback URL');
         return res.status(400).send('Authorization code missing');
     }
     try {
+        console.log(`****************************************** 54`);
 
         const accessToken = await oauth2Client.getToken({
             code,
@@ -82,7 +85,7 @@ const handleCallback = async (req, res) => {
         let sessionData = getSessionData();
         console.log(`Check Session || ${sessionData}`);
 
-        const updateUserInfo = await updateUserDetails(sessionData.userId || fetchUserId.user_id , sessionData.token, sessionData.userName, 'user_accounts');
+        const updateUserInfo = await updateUserDetails(sessionData.userId || fetchUserId.user_id, sessionData.token, sessionData.userName, 'user_accounts');
         console.log(`updateUserInfo || ${JSON.stringify(updateUserInfo)}`);
 
         const xoauth2Token = Buffer.from(`user=${userName}\x01auth=Bearer ${sessionData.token}\x01\x01`).toString('base64');
@@ -98,7 +101,7 @@ const handleCallback = async (req, res) => {
         await fetchEmailsOutlook(imapConfig)
             .then(async (resultEmails) => {
                 console.log(`Fetched emails:  ${JSON.stringify(resultEmails.length)}`);
-                await storeNewEmails((sessionData.userMailBoxName || userMailBoxName), resultEmails, (sessionData.userId || fetchUserId.user_id))
+                await storeNewEmails((sessionData.userMailBoxName || userMailBoxName), resultEmails, sessionData.userMailBoxName || fetchUserId.user_id)
                     .then(result => {
                         console.log(`New Emails Successfully Synced with Database`);
                         console.log(`STORED emails:  ${JSON.stringify(result)}`);

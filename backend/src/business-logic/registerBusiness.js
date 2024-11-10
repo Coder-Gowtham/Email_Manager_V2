@@ -1,6 +1,6 @@
 const { ENTERING_TO, BUSINESS_LOGIC, STATUS_CODE, ERROR_CODE } = require('../constants/constants');
 const userService = require('../services/userService.js');
-const bcrypt = require('bcrypt'); // Ensure bcrypt is imported
+const bcrypt = require('bcryptjs'); // Ensure bcrypt is imported
 const ShortUniqueId = require('short-uuid');
 const { setSessionData, getSessionData } = require('../utils/sessionManager');
 

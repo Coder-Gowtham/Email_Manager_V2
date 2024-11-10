@@ -7,7 +7,7 @@ const {config} = require('../constants/environConfig')
 dotenv.config();
 
 const client = new Client({
-    node: process.env.ELASTICSEARCH_URL || 'http://es01:9200',
+    node: 'http://es01:9200',
     auth: {
         username: config.ELASTICSEARCH_USERNAME || 'elastic',
         password: config.ELASTICSEARCH_PASSWORD || 'elastic@123',
