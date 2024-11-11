@@ -193,10 +193,13 @@ const updateUserDetails = async (userId, token, outlookEmail, userMailBoxName) =
         if (totalHits > 0) {
             console.log(`User with user_id ${userId} exists. Proceeding to update.`);
 
-            // Update the user details
+            // Retrieve the document ID from the search results
+            const documentId = resp.hits.hits[0]._id;
+
+            // Update the user details using the document's actual _id
             const response = await client.update({
                 index: 'user_accounts',
-                id: userId,
+                id: documentId, // Use `id` instead of `user_id`
                 body: {
                     doc: {
                         userMailBoxName,
@@ -228,6 +231,7 @@ const updateUserDetails = async (userId, token, outlookEmail, userMailBoxName) =
         };
     }
 };
+
 
 
 

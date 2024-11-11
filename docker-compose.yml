@@ -47,8 +47,8 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
       interval: 30s
-      timeout: 10s
-      retries: 10
+      timeout: 20s
+      retries: 20
 
 networks:
   app-network:
